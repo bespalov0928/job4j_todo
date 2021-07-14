@@ -83,7 +83,7 @@ public class HbmTodo implements AutoCloseable {
         }
     }
 
-    public Item add_new(Item item) {
+    public Item add(Item item) {
         return this.tx(session -> {
             session.save(item);
             return item;
@@ -91,7 +91,7 @@ public class HbmTodo implements AutoCloseable {
 
     }
 
-    public boolean edit_new(int id, Item item) {
+    public boolean edit(int id, Item item) {
         return this.tx(
                 session -> {
                     item.setId(id);
@@ -101,7 +101,7 @@ public class HbmTodo implements AutoCloseable {
     }
 
 
-    public List<Item> findAll_new() {
+    public List<Item> findAll() {
         return this.tx(session -> session.createQuery("from ru.job4j.todo.model.Item").list());
     }
 
