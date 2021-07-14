@@ -2,6 +2,7 @@ package ru.job4j.todo.store;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -9,6 +10,7 @@ import ru.job4j.todo.model.Item;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class HbmTodo implements AutoCloseable {
 
@@ -23,7 +25,7 @@ public class HbmTodo implements AutoCloseable {
         return Lazy.INST;
     }
 
-    public Item add(Item item) {
+    public Item add_old(Item item) {
         Item rsl = null;
         try (Session session = sf.openSession()) {
             session.beginTransaction();
@@ -36,7 +38,7 @@ public class HbmTodo implements AutoCloseable {
         return rsl;
     }
 
-    public boolean edit(int id, Item item) {
+    public boolean edit_old(int id, Item item) {
         boolean rsl = false;
         try (Session session = sf.openSession()) {
             session.beginTransaction();
@@ -50,7 +52,7 @@ public class HbmTodo implements AutoCloseable {
         return rsl;
     }
 
-    public List<Item> findAll() {
+    public List<Item> findAll_old() {
         List<Item> list = new ArrayList<>();
         try (Session session = sf.openSession()) {
             session.beginTransaction();
@@ -67,4 +69,40 @@ public class HbmTodo implements AutoCloseable {
     public void close() throws Exception {
         StandardServiceRegistryBuilder.destroy(registry);
     }
+
+    private <T> T tx(final Function<Session, T> command) {
+        final Session session = sf.openSession();
+        final Transaction tx = session.beginTransaction();
+        try {
+            T rsl = command.apply(session);
+            tx.commit();
+            return rsl;
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+            throw e;
+        }
+    }
+
+    public Item add_new(Item item) {
+        return this.tx(session -> {
+            session.save(item);
+            return item;
+        });
+
+    }
+
+    public boolean edit_new(int id, Item item) {
+        return this.tx(
+                session -> {
+                    item.setId(id);
+                    session.update(item);
+                    return true;
+                });
+    }
+
+
+    public List<Item> findAll_new() {
+        return this.tx(session -> session.createQuery("from ru.job4j.todo.model.Item").list());
+    }
+
 }
