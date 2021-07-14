@@ -18,16 +18,26 @@ function createItem() {
 function update() {
 
     var table = document.getElementById("tbody");
+    console.log("begin: " + table.rows.length);
     for (x = 0; x < table.rows.length; x++) {
+        console.log("x: " + x);
         table.deleteRow(x);
     }
-
+    console.log("end: " + table.rows.length);
     $.ajax({
         type: 'POST',
         url: 'http://localhost:8080/todo/update.do',
         dataType: 'json'
     }).done(function (data) {
         console.log("data: " + data);
+
+        console.log("begin: " + table.rows.length);
+        for (x = 0; x < table.rows.length; x++) {
+            console.log("x: " + x);
+            table.deleteRow(x);
+        }
+        console.log("end: " + table.rows.length);
+
         var view = document.getElementById("idAllView");
         var tbody = document.getElementById("tbody");
         for (index = 0; index < data.length; index++) {
@@ -55,9 +65,15 @@ function update() {
             td.appendChild(input);
 
             var td1 = document.createElement("td");
-            td1.setAttribute("id", "idDesc/"+index);
+            td1.setAttribute("id", "idDesc/" + index);
             td1.innerHTML = data[index].description;
             tr.appendChild(td1);
+
+            var td2 = document.createElement("td");
+            td2.setAttribute("id", "idDate/" + index);
+            td2.innerHTML = data[index].timeCreat;
+            tr.appendChild(td2);
+
             tbody.appendChild(tr);
         }
 
@@ -74,9 +90,10 @@ function edit() {
 
     for (x = 0; x < tbody.rows.length; x++) {
         var input = document.getElementById("idInput/" + x);
-        var desc = document.getElementById("idDesc/" + x)
+        var desc = document.getElementById("idDesc/" + x);
+        var date = document.getElementById("idDate/" + x);
         console.log(input.value);
-        array[x] = input.value+"/"+desc.innerText+"/"+input.checked;
+        array[x] = input.value + "/" + desc.innerText + "/" + input.checked+"/"+date.innerText;
         console.log(array.length);
 
     }
@@ -85,7 +102,7 @@ function edit() {
         type: 'POST',
         url: 'http://localhost:8080/todo/edit.do',
         data: JSON.stringify({
-            arr: 'arr='+array
+            arr: 'arr=' + array
         }),
         dataType: 'json'
     }).done(function (data) {

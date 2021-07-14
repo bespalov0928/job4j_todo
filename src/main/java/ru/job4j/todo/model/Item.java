@@ -1,6 +1,9 @@
 package ru.job4j.todo.model;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.Date;
+
 
 @Entity
 @Table(name = "items")
@@ -8,20 +11,22 @@ public class Item {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private int id;
 
     private String description;
     private boolean created;
     private boolean done;
+    private Date timeCreat;
 
     public Item(){
 
     }
 
-    public Item(String desc, boolean created, boolean done) {
+    public Item(String desc, boolean created, boolean done, Date timeCreat) {
         this.description = desc;
         this.created = created;
         this.done = done;
+        this.timeCreat = timeCreat;
     }
 
     public int getId() {
