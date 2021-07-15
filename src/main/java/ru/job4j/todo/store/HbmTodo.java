@@ -6,6 +6,7 @@ import org.hibernate.Transaction;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import ru.job4j.todo.model.Acaunt;
 import ru.job4j.todo.model.Item;
 
 import java.util.ArrayList;
@@ -23,45 +24,6 @@ public class HbmTodo implements AutoCloseable {
 
     public static HbmTodo instOf() {
         return Lazy.INST;
-    }
-
-    public Item add_old(Item item) {
-        Item rsl = null;
-        try (Session session = sf.openSession()) {
-            session.beginTransaction();
-            session.save(item);
-            session.getTransaction().commit();
-            rsl = item;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return rsl;
-    }
-
-    public boolean edit_old(int id, Item item) {
-        boolean rsl = false;
-        try (Session session = sf.openSession()) {
-            session.beginTransaction();
-            item.setId(id);
-            session.update(item);
-            session.getTransaction().commit();
-            rsl = true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return rsl;
-    }
-
-    public List<Item> findAll_old() {
-        List<Item> list = new ArrayList<>();
-        try (Session session = sf.openSession()) {
-            session.beginTransaction();
-            list = session.createQuery("from ru.job4j.todo.model.Item").list();
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return list;
     }
 
 
@@ -103,6 +65,14 @@ public class HbmTodo implements AutoCloseable {
 
     public List<Item> findAll() {
         return this.tx(session -> session.createQuery("from ru.job4j.todo.model.Item").list());
+    }
+
+    public Acaunt findAcaunt(String login) {
+        return this.tx(
+                session -> {
+                    Acaunt rsl = session.get(Acaunt.class, login);
+                    return rsl;
+                });
     }
 
 }

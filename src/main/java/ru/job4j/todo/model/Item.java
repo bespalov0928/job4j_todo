@@ -1,7 +1,6 @@
 package ru.job4j.todo.model;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.Date;
 
 
@@ -18,7 +17,11 @@ public class Item {
     private boolean done;
     private Date timeCreat;
 
-    public Item(){
+//    @ManyToOne
+//    @JoinColumn(name = "user_id")
+//    private Acaunt acaunt;
+
+    public Item() {
 
     }
 
@@ -27,6 +30,7 @@ public class Item {
         this.created = created;
         this.done = done;
         this.timeCreat = timeCreat;
+        //this.acaunt = acaunt;
     }
 
     public int getId() {

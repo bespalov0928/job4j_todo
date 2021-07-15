@@ -36,4 +36,13 @@
     <url-pattern>/edit.do</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <servlet-name>AuthServelet</servlet-name>
+    <servlet-class>ru.job4j.todo.controller.AuthServelet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AuthServelet</servlet-name>
+    <url-pattern>/auth.do</url-pattern>
+  </servlet-mapping>
+
 </web-app>
