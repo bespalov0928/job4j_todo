@@ -12,6 +12,9 @@ function createItem() {
         console.log("data: " + data);
     }).fail(function (err) {
         console.log("err: " + err);
+        alert("err")
+        window.location.href = 'http://localhost:8080/todo/error.html';
+
     });
 }
 
@@ -29,7 +32,7 @@ function update() {
         url: 'http://localhost:8080/todo/update.do',
         dataType: 'json'
     }).done(function (data) {
-        console.log("data: " + data);
+        //console.log("data: " + data);
 
         console.log("begin: " + table.rows.length);
         for (x = 0; x < table.rows.length; x++) {
@@ -40,10 +43,13 @@ function update() {
 
         var view = document.getElementById("idAllView");
         var tbody = document.getElementById("tbody");
+        //var buttun = document.getElementById("idHref");
+
         for (index = 0; index < data.length; index++) {
             if (!view.checked && !data[index].done) {
                 continue;
             }
+            //console.log(data[index]);
             var tr = document.createElement("tr");
 
             var th = document.createElement("th");
@@ -74,14 +80,29 @@ function update() {
             td2.innerHTML = data[index].timeCreat;
             tr.appendChild(td2);
 
+            //console.log(data[index].acaunt);
+            //console.log(data[index].acaunt.login);
+
+            var td3 = document.createElement("td");
+            //td3.setAttribute("id", "idAuthor/" + index);
+            if (data[index].acaunt != null){
+                //var o=JSON.parse(data[index].acaunt);
+                //console.log(data[index].acaunt.login);
+                td3.innerHTML = data[index].acaunt.login;
+            }
+
+            tr.appendChild(td3);
+
             tbody.appendChild(tr);
         }
-
-
     }).fail(function (err) {
         console.log("err: " + err);
+        alert("err")
+        window.location.href = 'http://localhost:8080/todo/error.html';
+
     });
 }
+
 
 function edit() {
 
@@ -93,7 +114,7 @@ function edit() {
         var desc = document.getElementById("idDesc/" + x);
         var date = document.getElementById("idDate/" + x);
         console.log(input.value);
-        array[x] = input.value + "/" + desc.innerText + "/" + input.checked+"/"+date.innerText;
+        array[x] = input.value + "/" + desc.innerText + "/" + input.checked + "/" + date.innerText;
         console.log(array.length);
 
     }
@@ -109,6 +130,9 @@ function edit() {
         console.log("data: " + data);
     }).fail(function (err) {
         console.log("err: " + err);
+        alert("err")
+        window.location.href = 'http://localhost:8080/todo/error.html';
+
     });
 
 }

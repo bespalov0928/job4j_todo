@@ -17,20 +17,20 @@ public class Item {
     private boolean done;
     private Date timeCreat;
 
-//    @ManyToOne
-//    @JoinColumn(name = "user_id")
-//    private Acaunt acaunt;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Acaunt acaunt;
 
     public Item() {
 
     }
 
-    public Item(String desc, boolean created, boolean done, Date timeCreat) {
+    public Item(String desc, boolean created, boolean done, Date timeCreat, Acaunt acaunt) {
         this.description = desc;
         this.created = created;
         this.done = done;
         this.timeCreat = timeCreat;
-        //this.acaunt = acaunt;
+        this.acaunt = acaunt;
     }
 
     public int getId() {

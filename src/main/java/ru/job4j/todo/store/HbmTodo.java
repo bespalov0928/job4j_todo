@@ -45,12 +45,11 @@ public class HbmTodo implements AutoCloseable {
         }
     }
 
-    public Item add(Item item) {
+    public <T> T create(T item) {
         return this.tx(session -> {
             session.save(item);
             return item;
         });
-
     }
 
     public boolean edit(int id, Item item) {
@@ -70,7 +69,10 @@ public class HbmTodo implements AutoCloseable {
     public Acaunt findAcaunt(String login) {
         return this.tx(
                 session -> {
-                    Acaunt rsl = session.get(Acaunt.class, login);
+                    Acaunt rsl = (Acaunt) session.createQuery("from ru.job4j.todo.model.Acaunt where login = :login"
+                    ).setParameter("login", login).uniqueResult();;
+
+//                    Acaunt rsl = session.get(Acaunt.class, login);
                     return rsl;
                 });
     }

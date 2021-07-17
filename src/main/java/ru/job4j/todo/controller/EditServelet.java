@@ -3,6 +3,7 @@ package ru.job4j.todo.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.json.JSONObject;
+import ru.job4j.todo.model.Acaunt;
 import ru.job4j.todo.model.Item;
 import ru.job4j.todo.store.HbmTodo;
 
@@ -33,6 +34,7 @@ public class EditServelet extends HttpServlet {
         JSONObject jsonObject = new JSONObject(in);
         Map<String, Object> map = jsonObject.toMap();
 
+        Acaunt ac = (Acaunt) req.getSession().getAttribute("user");
 
         String arrKey = (String) map.get("arr");
         String arrVal = arrKey.split("=")[1];
@@ -51,7 +53,7 @@ public class EditServelet extends HttpServlet {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            rsl = HbmTodo.instOf().edit(id, new Item(desc, true, done, date));
+            rsl = HbmTodo.instOf().edit(id, new Item(desc, true, done, date, ac));
         }
         String json = GSON.toJson(rsl);
         writer.println(json);

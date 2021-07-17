@@ -45,4 +45,13 @@
     <url-pattern>/auth.do</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <servlet-name>RegServelet</servlet-name>
+    <servlet-class>ru.job4j.todo.controller.RegServelet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RegServelet</servlet-name>
+    <url-pattern>/reg.do</url-pattern>
+  </servlet-mapping>
+
 </web-app>

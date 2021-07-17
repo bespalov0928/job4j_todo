@@ -2,6 +2,7 @@ package ru.job4j.todo.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import ru.job4j.todo.model.Acaunt;
 import ru.job4j.todo.model.Item;
 
 import javax.servlet.ServletException;
@@ -34,6 +35,14 @@ public class CreateServelet extends HttpServlet {
         PrintWriter writer = resp.getWriter();
 
         Date date = new Date(System.currentTimeMillis());
+        Acaunt ac = (Acaunt) req.getSession().getAttribute("user");
+        if (ac == null){
+            resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Ошибка авторизации");
+            writer.println("Ошибка авторизации");
+            writer.flush();
+            return;
+        }
+
 
         BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream(), "utf-8"));
         String in = br.readLine();
@@ -43,12 +52,13 @@ public class CreateServelet extends HttpServlet {
         String desc = (String) map.get("desc");
         String descValue = desc.split("=")[1];
 
-        Item rsl = HbmTodo.instOf().add(new Item(
+        Item rsl = HbmTodo.instOf().create(new Item(
                 descValue,
                 true,
                 false,
-                new Date(System.currentTimeMillis())
-        ));
+                new Date(System.currentTimeMillis()),
+                ac)
+        );
         String json = GSON.toJson(rsl);
         writer.println(json);
         writer.flush();
