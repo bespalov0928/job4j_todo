@@ -7,6 +7,8 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import ru.job4j.todo.model.Acaunt;
+import ru.job4j.todo.model.CarBrend;
+import ru.job4j.todo.model.CarModel;
 import ru.job4j.todo.model.Item;
 
 import java.util.ArrayList;
@@ -75,6 +77,45 @@ public class HbmTodo implements AutoCloseable {
 //                    Acaunt rsl = session.get(Acaunt.class, login);
                     return rsl;
                 });
+    }
+
+    public static void main(String[] args) {
+
+        HbmTodo hbmTodo = new HbmTodo();
+
+        CarModel crown = new CarModel("crown");
+        CarModel windom = new CarModel("windom");
+        CarModel camry = new CarModel("camry");
+        CarModel mark2 = new CarModel("mark2");
+
+        hbmTodo.tx(session -> {
+            session.save(crown);
+            return crown;
+        });
+
+        hbmTodo.tx(session -> {
+            session.save(windom);
+            return windom;
+        });
+
+        hbmTodo.tx(session -> {
+            session.save(camry);
+            return camry;
+        });
+
+        hbmTodo.tx(session -> {
+            session.save(mark2);
+            return mark2;
+        });
+
+        CarBrend toyota = new CarBrend("toyota");
+
+        toyota.addModel(crown);
+        toyota.addModel(windom);
+        toyota.addModel(camry);
+        toyota.addModel(mark2);
+
+        hbmTodo.tx(session -> session.save(toyota));
     }
 
 }
