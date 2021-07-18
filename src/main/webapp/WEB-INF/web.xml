@@ -9,6 +9,8 @@
          version="4.0">
   <display-name>Archetype Created Web Application</display-name>
 
+
+
   <servlet>
     <servlet-name>IndexServelet</servlet-name>
     <servlet-class>ru.job4j.todo.controller.IndexServelet</servlet-class>
@@ -18,7 +20,17 @@
     <url-pattern>/update.do</url-pattern>
   </servlet-mapping>
 
-  <servlet>
+    <filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>ru.job4j.todo.model.AuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>*.do</url-pattern>
+    </filter-mapping>
+
+
+    <servlet>
     <servlet-name>CreateServelet</servlet-name>
     <servlet-class>ru.job4j.todo.controller.CreateServelet</servlet-class>
   </servlet>

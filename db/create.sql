@@ -8,5 +8,5 @@ create table items(id serial primary key,
 
 drop table Acaunt;
 create table Acaunt(id serial primary key,
- login varchar (200),
+ login varchar (200) UNIQUE,
  password varchar (200));

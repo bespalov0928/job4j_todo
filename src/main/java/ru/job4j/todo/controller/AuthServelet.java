@@ -2,12 +2,11 @@ package ru.job4j.todo.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import org.json.JSONObject;
 import ru.job4j.todo.model.Acaunt;
 import ru.job4j.todo.store.HbmTodo;
 
-import javax.servlet.ServletException;
+import javax.servlet.*;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -71,5 +70,32 @@ public class AuthServelet extends HttpServlet {
         String gson = GSON.toJson(rsl);
         out.println(gson);
         out.flush();
+    }
+
+    public static class AuthFilter implements Filter {
+        @Override
+        public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+            HttpServletRequest req = (HttpServletRequest) servletRequest;
+            HttpServletResponse resp = (HttpServletResponse) servletResponse;
+            String uri = req.getRequestURI();
+            System.out.println("uri: "+uri);
+            if (uri.endsWith("auth.do")){
+                filterChain.doFilter(servletRequest, servletResponse);
+                return;
+            }
+            if (req.getSession().getAttribute("user") == null){
+                resp.sendRedirect(req.getContextPath()+"/auth.html");
+            }
+        }
+
+        @Override
+        public void init(FilterConfig filterConfig) throws ServletException {
+
+        }
+
+        @Override
+        public void destroy() {
+
+        }
     }
 }
