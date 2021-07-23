@@ -6,6 +6,7 @@ import org.hibernate.Transaction;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.boot.registry.internal.StandardServiceRegistryImpl;
 import ru.job4j.todo.model.Acaunt;
 import ru.job4j.todo.model.CarBrend;
 import ru.job4j.todo.model.CarModel;
@@ -72,7 +73,8 @@ public class HbmTodo implements AutoCloseable {
         return this.tx(
                 session -> {
                     Acaunt rsl = (Acaunt) session.createQuery("from ru.job4j.todo.model.Acaunt where login = :login"
-                    ).setParameter("login", login).uniqueResult();;
+                    ).setParameter("login", login).uniqueResult();
+
 
 //                    Acaunt rsl = session.get(Acaunt.class, login);
                     return rsl;
@@ -81,41 +83,115 @@ public class HbmTodo implements AutoCloseable {
 
     public static void main(String[] args) {
 
-        HbmTodo hbmTodo = new HbmTodo();
+//        HbmTodo hbmTodo = new HbmTodo();
 
-        CarModel crown = new CarModel("crown");
-        CarModel windom = new CarModel("windom");
-        CarModel camry = new CarModel("camry");
-        CarModel mark2 = new CarModel("mark2");
 
-        hbmTodo.tx(session -> {
-            session.save(crown);
-            return crown;
-        });
+//        CarBrend toyota = new CarBrend("toyota");
+//        hbmTodo.tx(session -> session.save(toyota));
+//
+//        CarModel crown = new CarModel("crown", toyota);
+//        CarModel windom = new CarModel("windom", toyota);
+//        CarModel camry = new CarModel("camry", toyota);
+//        CarModel mark2 = new CarModel("mark2", toyota);
+//
+//        hbmTodo.tx(session -> {
+//            session.save(crown);
+//            return crown;
+//        });
+//
+//        hbmTodo.tx(session -> {
+//            session.save(windom);
+//            return windom;
+//        });
+//
+//        hbmTodo.tx(session -> {
+//            session.save(camry);
+//            return camry;
+//        });
+//
+//        hbmTodo.tx(session -> {
+//            session.save(mark2);
+//            return mark2;
+//        });
 
-        hbmTodo.tx(session -> {
-            session.save(windom);
-            return windom;
-        });
 
-        hbmTodo.tx(session -> {
-            session.save(camry);
-            return camry;
-        });
+//        CarBrend toyota = hbmTodo.tx(session -> {
+//            CarBrend rsl = (CarBrend) session.createQuery("from  ru.job4j.todo.model.CarBrend where id=:id"
+//            ).setParameter("id", 1).uniqueResult();
+//            return rsl;
+//        });
+//
+//
+//        CarModel crown = hbmTodo.tx(session -> {
+//            CarModel rsl = (CarModel) session.createQuery("from ru.job4j.todo.model.CarModel where id=:id"
+//            ).setParameter("id", 1).uniqueResult();
+//            return rsl;
+//        });
+//
+//        CarModel windom = hbmTodo.tx(session -> {
+//            CarModel rsl = (CarModel) session.createQuery("from ru.job4j.todo.model.CarModel where id=:id"
+//            ).setParameter("id", 2).uniqueResult();
+//            return rsl;
+//        });
+//
+//        CarModel camry = hbmTodo.tx(session -> {
+//            CarModel rsl = (CarModel) session.createQuery("from ru.job4j.todo.model.CarModel where id=:id"
+//            ).setParameter("id", 3).uniqueResult();
+//            return rsl;
+//        });
+//
+//        CarModel mark2 = hbmTodo.tx(session -> {
+//            CarModel rsl = (CarModel) session.createQuery("from ru.job4j.todo.model.CarModel where id=:id"
+//            ).setParameter("id", 4).uniqueResult();
+//            return rsl;
+//        });
+//
+//        toyota.addModel(crown);
+//        toyota.addModel(windom);
+//        toyota.addModel(camry);
+//        toyota.addModel(mark2);
+//
+//        hbmTodo.tx(session -> {
+//            session.save(toyota);
+//            return toyota;
+//        });
 
-        hbmTodo.tx(session -> {
-            session.save(mark2);
-            return mark2;
-        });
 
-        CarBrend toyota = new CarBrend("toyota");
+//        List<CarBrend> listCar = new ArrayList<>();
+//        listCar = hbmTodo.tx(session -> session.createQuery("from CarBrend").list());
+//        for (CarBrend brend : listCar) {
+//            for (CarModel model : brend.getModels()) {
+//                System.out.println(model);
+//            }
+//        }
 
-        toyota.addModel(crown);
-        toyota.addModel(windom);
-        toyota.addModel(camry);
-        toyota.addModel(mark2);
 
-        hbmTodo.tx(session -> session.save(toyota));
+        List<CarBrend> list = new ArrayList<>();
+        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build();
+        try {
+            SessionFactory sf = new MetadataSources(registry).buildMetadata().buildSessionFactory();
+            Session session = sf.openSession();
+            session.beginTransaction();
+//            list = session.createQuery("from CarBrend").list();
+//            for (CarBrend brend : list) {
+//                for (CarModel model : brend.getModels()) {
+//                    System.out.println(model);
+//                }
+//            }
+
+            list = session.createQuery("select distinct c from CarBrend c join fetch c.models").list();
+            session.getTransaction().commit();
+            session.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            StandardServiceRegistryBuilder.destroy(registry);
+        }
+        for (CarModel model : list.get(0).getModels()) {
+            System.out.println(model);
+        }
+
     }
 
 }

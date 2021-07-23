@@ -14,7 +14,7 @@ public class CarBrend {
 
     private String name;
 
-    @OneToMany(cascade =  CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "carBrend")
     private List<CarModel> models = new ArrayList<>();
 
     public CarBrend(String name) {
@@ -26,5 +26,9 @@ public class CarBrend {
 
     public void addModel(CarModel carModel){
         this.models.add(carModel);
+    }
+
+    public List<CarModel> getModels() {
+        return models;
     }
 }
