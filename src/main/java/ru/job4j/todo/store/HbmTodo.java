@@ -7,10 +7,7 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.boot.registry.internal.StandardServiceRegistryImpl;
-import ru.job4j.todo.model.Acaunt;
-import ru.job4j.todo.model.CarBrend;
-import ru.job4j.todo.model.CarModel;
-import ru.job4j.todo.model.Item;
+import ru.job4j.todo.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +26,6 @@ public class HbmTodo implements AutoCloseable {
         return Lazy.INST;
     }
 
-
     @Override
     public void close() throws Exception {
         StandardServiceRegistryBuilder.destroy(registry);
@@ -41,6 +37,7 @@ public class HbmTodo implements AutoCloseable {
         try {
             T rsl = command.apply(session);
             tx.commit();
+            session.close();
             return rsl;
         } catch (Exception e) {
             session.getTransaction().rollback();
@@ -56,6 +53,7 @@ public class HbmTodo implements AutoCloseable {
     }
 
     public boolean edit(int id, Item item) {
+
         return this.tx(
                 session -> {
                     item.setId(id);
@@ -64,9 +62,34 @@ public class HbmTodo implements AutoCloseable {
                 });
     }
 
+    public Item finfItemId(int id) {
+        return this.tx(session -> {
+            Item rsl = (Item) session.createQuery("from ru.job4j.todo.model.Item where id=:id"
+            ).setParameter("id", id).uniqueResult();
+            return rsl;
+        });
+    }
 
     public List<Item> findAll() {
-        return this.tx(session -> session.createQuery("from ru.job4j.todo.model.Item").list());
+
+        List<Item> list = new ArrayList<>();
+        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build();
+        try (SessionFactory sf = new MetadataSources(registry).buildMetadata().buildSessionFactory()) {
+            Session session = sf.openSession();
+            session.beginTransaction();
+            list = session.createQuery("from ru.job4j.todo.model.Item").list();
+            for (Item item:list) {
+                for (Category category: item.getCategories()) {
+                    System.out.println(category.getName());
+                }
+            }
+            session.getTransaction().commit();
+            session.close();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return list;
     }
 
     public Acaunt findAcaunt(String login) {
@@ -79,6 +102,18 @@ public class HbmTodo implements AutoCloseable {
 //                    Acaunt rsl = session.get(Acaunt.class, login);
                     return rsl;
                 });
+    }
+
+    public List<Category> finfAllCategories() {
+        return this.tx(session -> session.createQuery("from ru.job4j.todo.model.Category").list());
+    }
+
+    public Category findCategoryId(int id){
+        return this.tx(session -> {
+            Category rsl = (Category) session.createQuery("from ru.job4j.todo.model.Category where id=:id"
+            ).setParameter("id", id).uniqueResult();
+            return rsl;
+        });
     }
 
     public static void main(String[] args) {

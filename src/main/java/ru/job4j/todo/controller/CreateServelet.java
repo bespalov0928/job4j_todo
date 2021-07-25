@@ -3,6 +3,7 @@ package ru.job4j.todo.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import ru.job4j.todo.model.Acaunt;
+import ru.job4j.todo.model.Category;
 import ru.job4j.todo.model.Item;
 
 import javax.servlet.ServletException;
@@ -14,7 +15,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.security.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONObject;
@@ -34,15 +37,14 @@ public class CreateServelet extends HttpServlet {
 
         PrintWriter writer = resp.getWriter();
 
-        Date date = new Date(System.currentTimeMillis());
         Acaunt ac = (Acaunt) req.getSession().getAttribute("user");
-        if (ac == null){
+        if (ac == null) {
             resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Ошибка авторизации");
             writer.println("Ошибка авторизации");
             writer.flush();
             return;
         }
-
+        Item rsl = null;
 
         BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream(), "utf-8"));
         String in = br.readLine();
@@ -51,14 +53,19 @@ public class CreateServelet extends HttpServlet {
 
         String desc = (String) map.get("desc");
         String descValue = desc.split("=")[1];
-
-        Item rsl = HbmTodo.instOf().create(new Item(
-                descValue,
+        List<String> arrOpt = (List<String>) map.get("opt");
+        Item item = new Item(descValue,
                 true,
                 false,
                 new Date(System.currentTimeMillis()),
-                ac)
-        );
+                ac);
+
+        for (String index : arrOpt) {
+            Category cat = HbmTodo.instOf().findCategoryId(Integer.valueOf(index));
+            item.addCategory(cat);
+        }
+
+        rsl = HbmTodo.instOf().create(item);
         String json = GSON.toJson(rsl);
         writer.println(json);
         writer.flush();

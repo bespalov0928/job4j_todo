@@ -42,18 +42,20 @@ public class EditServelet extends HttpServlet {
         for (int index = 0; index<arr.length; index++){
             String[] arrItem = arr[index].split("/");
             Integer id = Integer.valueOf(arrItem[0]);
-            String desc = arrItem[1];
+//            String desc = arrItem[1];
             boolean done = Boolean.parseBoolean(arrItem[2]);
-            Date date = null;
+//            Date date = null;
 
             SimpleDateFormat format = new SimpleDateFormat();
             format.applyPattern("dd.MM.yyyy");
-            try {
-                date = format.parse(arrItem[3]);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            rsl = HbmTodo.instOf().edit(id, new Item(desc, true, done, date, ac));
+//            try {
+//                date = format.parse(arrItem[3]);
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+            Item item = HbmTodo.instOf().finfItemId(id);
+            item.setDone(done);
+            rsl = HbmTodo.instOf().edit(id, item);
         }
         String json = GSON.toJson(rsl);
         writer.println(json);

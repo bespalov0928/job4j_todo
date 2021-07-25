@@ -26,7 +26,8 @@
     </script>
 </head>
 
-<body  onload="update();">
+<body  onload="update(); categories();">
+<!--<body  onload="update();">-->
 
 <div class="container pt-3">
 
@@ -40,6 +41,15 @@
             <input type="text" class="form-control" id="idCreated" aria-describedby="Description"
                    placeholder="Описание задания">
         </div>
+        <div class="form-group" id="isDivCat">
+            <label for="idSelect">Список категорий</label>
+            <select class="form-control" name="cIds" id="idSelect" multiple>
+                <!--<option value="1">Первая</option>-->
+            </select>
+            <!--<div class="col-sm-5">-->
+            <!--</div>-->
+        </div>
+
         <button type="button" class="btn btn-primary" onclick="createItem()">Добавить</button>
     </form>
 

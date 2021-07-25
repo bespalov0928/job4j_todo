@@ -17,17 +17,17 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>IndexServelet</servlet-name>
-    <url-pattern>/update.do</url-pattern>
+    <url-pattern>/update</url-pattern>
   </servlet-mapping>
 
-    <filter>
-        <filter-name>AuthFilter</filter-name>
-        <filter-class>ru.job4j.todo.model.AuthFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>AuthFilter</filter-name>
-        <url-pattern>*.do</url-pattern>
-    </filter-mapping>
+    <!--<filter>-->
+        <!--<filter-name>AuthFilter</filter-name>-->
+        <!--<filter-class>ru.job4j.todo.model.AuthFilter</filter-class>-->
+    <!--</filter>-->
+    <!--<filter-mapping>-->
+        <!--<filter-name>AuthFilter</filter-name>-->
+        <!--<url-pattern>*.do</url-pattern>-->
+    <!--</filter-mapping>-->
 
 
     <servlet>
@@ -65,5 +65,16 @@
     <servlet-name>RegServelet</servlet-name>
     <url-pattern>/reg.do</url-pattern>
   </servlet-mapping>
+
+  <servlet>
+    <servlet-name>CategoriesServelet</servlet-name>
+    <servlet-class>ru.job4j.todo.controller.CategoriesServelet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CategoriesServelet</servlet-name>
+    <url-pattern>/categories</url-pattern>
+  </servlet-mapping>
+
+
 
 </web-app>

@@ -1,7 +1,9 @@
 package ru.job4j.todo.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -21,16 +23,27 @@ public class Item {
     @JoinColumn(name = "user_id")
     private Acaunt acaunt;
 
-    public Item() {
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<Category> categories = new ArrayList<>();
 
+    public Item() {
     }
 
-    public Item(String desc, boolean created, boolean done, Date timeCreat, Acaunt acaunt) {
+   public Item(String desc, boolean created, boolean done, Date timeCreat, Acaunt acaunt) {
         this.description = desc;
         this.created = created;
         this.done = done;
         this.timeCreat = timeCreat;
         this.acaunt = acaunt;
+    }
+
+
+    public void addCategory(Category category) {
+        this.categories.add(category);
+    }
+
+    public List<Category> getCategories() {
+        return categories;
     }
 
     public int getId() {
@@ -41,31 +54,13 @@ public class Item {
         this.id = id;
     }
 
-    public String getDesc() {
-        return description;
-    }
-
-    public void setDesc(String desc) {
-        this.description = desc;
-    }
-
-    public boolean isCreated() {
-        return created;
-    }
-
-    public void setCreated(boolean created) {
-        this.created = created;
-    }
-
-    public boolean isDone() {
-        return done;
-    }
-
     public void setDone(boolean done) {
         this.done = done;
     }
 
+
     @Override
+
     public String toString() {
         return String.format("id:'%s', desc: '%s'", id, description);
     }
