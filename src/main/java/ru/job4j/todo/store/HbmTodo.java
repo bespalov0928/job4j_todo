@@ -77,12 +77,13 @@ public class HbmTodo implements AutoCloseable {
         try (SessionFactory sf = new MetadataSources(registry).buildMetadata().buildSessionFactory()) {
             Session session = sf.openSession();
             session.beginTransaction();
-            list = session.createQuery("from ru.job4j.todo.model.Item").list();
-            for (Item item:list) {
-                for (Category category: item.getCategories()) {
-                    System.out.println(category.getName());
-                }
-            }
+//            list = session.createQuery("from ru.job4j.todo.model.Item").list();
+            list = session.createQuery("select i from Item i join fetch i.categories c").list();
+//            for (Item item:list) {
+//                for (Category category: item.getCategories()) {
+//                    System.out.println(category.getName());
+//                }
+//            }
             session.getTransaction().commit();
             session.close();
 
