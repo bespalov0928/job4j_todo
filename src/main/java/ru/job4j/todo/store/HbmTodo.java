@@ -78,7 +78,7 @@ public class HbmTodo implements AutoCloseable {
             Session session = sf.openSession();
             session.beginTransaction();
 //            list = session.createQuery("from ru.job4j.todo.model.Item").list();
-            list = session.createQuery("select i from Item i join fetch i.categories c").list();
+            list = session.createQuery("select distinct i from Item i left join fetch i.categories c").list();
 //            for (Item item:list) {
 //                for (Category category: item.getCategories()) {
 //                    System.out.println(category.getName());

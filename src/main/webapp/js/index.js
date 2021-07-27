@@ -3,8 +3,8 @@ function createItem() {
         type: 'POST',
         url: 'http://localhost:8080/todo/createItem.do',
         data: JSON.stringify({
-            desc: 'desc=' + $('#idCreated').val(),
-            opt: Array.from(document.getElementById('idSelect').selectedOptions).map(el => el.value)
+            desc: 'desc=' + $('#idCreated').val()
+            ,opt: Array.from(document.getElementById('idSelect').selectedOptions).map(el => el.value)
         }),
         dataType: 'json'
     }).done(function (data) {
@@ -28,6 +28,8 @@ function update() {
         url: 'http://localhost:8080/todo/update',
         dataType: 'json'
     }).done(function (data) {
+
+        // console.log(data);
         for (x = 0; x < table.rows.length; x++) {
             table.deleteRow(x);
         }
@@ -63,7 +65,7 @@ function update() {
             td1.innerHTML = data[index].description;
             tr.appendChild(td1);
 
-            var td2 = document.createElement("td");
+             var td2 = document.createElement("td");
             td2.setAttribute("id", "idDate/" + index);
             td2.innerHTML = data[index].timeCreat;
             tr.appendChild(td2);
@@ -73,6 +75,21 @@ function update() {
                 td3.innerHTML = data[index].acaunt.login;
             }
             tr.appendChild(td3);
+
+            var td4 = document.createElement("td");
+            var innerHTML = "";
+            // console.log(data[index]);
+            // console.log(data[index].categories);
+            // console.log(data[index].categories);
+             for (x = 0; x < data[index].categories.length; x++) {
+                 // console.log(data[index].categories[x]);
+                 innerHTML = innerHTML + ";" + data[index].categories[x].name;
+             }
+            // console.log(innerHTML);
+            td4.innerText = innerHTML;
+            tr.appendChild(td4);
+
+
             tbody.appendChild(tr);
         }
     }).fail(function (err) {
@@ -82,7 +99,6 @@ function update() {
         window.location.href = 'http://localhost:8080/todo/error.html';
     });
 }
-
 
 function edit() {
 
