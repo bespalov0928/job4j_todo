@@ -71,19 +71,10 @@ public class HbmTodo implements AutoCloseable {
     }
 
     public List<Item> findAll() {
-        List<Item> list = new ArrayList<>();
-        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build();
-        try (SessionFactory sf = new MetadataSources(registry).buildMetadata().buildSessionFactory()) {
-            Session session = sf.openSession();
-            session.beginTransaction();
-            list = session.createQuery("select distinct i from Item i left join fetch i.categories c").list();
-            session.getTransaction().commit();
-            session.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return list;
+        return this.tx(session -> {
+            List<Item> list = session.createQuery("select distinct i from Item i left join fetch i.categories c").list();
+            return list;
+        });
     }
 
     public Acaunt findAcaunt(String login) {
@@ -99,7 +90,7 @@ public class HbmTodo implements AutoCloseable {
         return this.tx(session -> session.createQuery("from ru.job4j.todo.model.Category").list());
     }
 
-    public Category findCategoryId(int id){
+    public Category findCategoryId(int id) {
         return this.tx(session -> {
             Category rsl = (Category) session.createQuery("from ru.job4j.todo.model.Category where id=:id"
             ).setParameter("id", id).uniqueResult();
