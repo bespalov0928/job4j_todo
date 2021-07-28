@@ -29,7 +29,6 @@ function update() {
         dataType: 'json'
     }).done(function (data) {
 
-        // console.log(data);
         for (x = 0; x < table.rows.length; x++) {
             table.deleteRow(x);
         }
@@ -78,14 +77,9 @@ function update() {
 
             var td4 = document.createElement("td");
             var innerHTML = "";
-            // console.log(data[index]);
-            // console.log(data[index].categories);
-            // console.log(data[index].categories);
              for (x = 0; x < data[index].categories.length; x++) {
-                 // console.log(data[index].categories[x]);
-                 innerHTML = innerHTML + ";" + data[index].categories[x].name;
+                 innerHTML = innerHTML + data[index].categories[x].name+'\n';
              }
-            // console.log(innerHTML);
             td4.innerText = innerHTML;
             tr.appendChild(td4);
 
