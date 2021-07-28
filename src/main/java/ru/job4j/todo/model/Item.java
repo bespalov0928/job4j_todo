@@ -17,6 +17,8 @@ public class Item {
     private String description;
     private boolean created;
     private boolean done;
+
+    @Temporal(TemporalType.TIMESTAMP)
     private Date timeCreat;
 
     @ManyToOne

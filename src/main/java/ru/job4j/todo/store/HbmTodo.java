@@ -71,7 +71,6 @@ public class HbmTodo implements AutoCloseable {
     }
 
     public List<Item> findAll() {
-
         List<Item> list = new ArrayList<>();
         final StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build();
         try (SessionFactory sf = new MetadataSources(registry).buildMetadata().buildSessionFactory()) {
@@ -81,7 +80,7 @@ public class HbmTodo implements AutoCloseable {
             session.getTransaction().commit();
             session.close();
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return list;
