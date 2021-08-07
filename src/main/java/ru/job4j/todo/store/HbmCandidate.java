@@ -31,7 +31,6 @@ public class HbmCandidate implements AutoCloseable {
             session.save(Alex);
             session.save(Nikolay);
 
-
             //select
             List result = session.createQuery("from ru.job4j.todo.model.Candidate").list();
             for (Object candidate : result) {
@@ -47,11 +46,13 @@ public class HbmCandidate implements AutoCloseable {
                     .setParameter("fId", 6)
                     .executeUpdate();
 
-
-
             //delete
             session.createQuery("delete from Candidate where id = :fId")
                     .setParameter("fId", 4)
+                    .executeUpdate();
+
+            session.createQuery("delete from Candidate where name = :fId")
+                    .setParameter("fId", "Алексей")
                     .executeUpdate();
 
             //insert
@@ -69,10 +70,8 @@ public class HbmCandidate implements AutoCloseable {
                 System.out.println(candidate);
             }
 
-
             session.getTransaction().commit();
             session.close();
-
 
         } catch (Exception e) {
             e.printStackTrace();
