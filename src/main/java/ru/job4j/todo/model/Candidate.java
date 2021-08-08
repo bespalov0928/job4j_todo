@@ -13,6 +13,10 @@ public class Candidate {
     private String experience;
     private int salary;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "baseVacancies_id")
+    private BaseVacancies baseVacancies;
+
     public Candidate(String name, String experience, int salary) {
         this.name = name;
         this.experience = experience;
@@ -28,6 +32,14 @@ public class Candidate {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public void setBaseVacancies(BaseVacancies baseVacancies) {
+        this.baseVacancies = baseVacancies;
+    }
+
+    public BaseVacancies getBaseVacancies() {
+        return baseVacancies;
     }
 
     @Override
